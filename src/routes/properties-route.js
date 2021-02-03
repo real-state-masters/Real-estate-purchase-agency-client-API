@@ -6,10 +6,21 @@ const propertiesController = require("../controllers/property-controller");
 
 propertiesRouter.get("/properties", propertiesController.getProperties);
 
-// propertiesRouter.get("/properties/:propertyID", propertiesController.getProperty);
+propertiesRouter.get(
+  "/properties/:propertyID",
+  propertiesController.getProperty,
+);
 
-// propertiesRouter.get("/properties/:location", propertiesController.searchByLocation);
+propertiesRouter.get("/location", propertiesController.getByLocation);
 
-// propertiesRouter.get("/properties/:services", propertiesController.searchByServices);
+propertiesRouter.get("/services", propertiesController.getByServices);
+
+// propertiesRouter.post("/favorites", propertiesController.addFavorites);
+
+// propertiesRouter.delete("/favorites/:propertyID", propertiesController.deleteFavorites);
+
+// propertiesRouter.post("/bookings", propertiesController.bookProperty);
+
+// propertiesRouter.delete("/bookings/:propertyID", propertiesController.deleteBookProperty);
 
 module.exports = propertiesRouter;
