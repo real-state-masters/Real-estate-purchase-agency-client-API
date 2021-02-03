@@ -1,60 +1,69 @@
 const axios = require("axios");
 
 async function getProperties(req, res, next) {
-  const properties = await axios
-    .get("https://restcountries.eu/rest/v2/all")
-    .catch(next);
+  try {
+    const properties = await axios.get("https://restcountries.eu/rest/v2/all");
 
-  res.status(200).send({
-    data: properties.data,
-    error: null,
-  });
+    res.status(200).send({
+      data: properties.data,
+      error: null,
+    });
+  } catch (ex) {
+    next(ex);
+  }
 }
 
 async function getProperty(req, res, next) {
   const propertyID = req.params.propertyID;
 
-  const property = await axios
-    .get("https://restcountries.eu/rest/v2/callingcode/" + propertyID)
-    .catch(next);
+  try {
+    const property = await axios.get(
+      "https://restcountries.eu/rest/v2/callingcode/" + propertyID,
+    );
 
-  if (property) {
-    res.status(200).send({
-      data: property.data,
-      error: null,
-    });
-  } else {
-    res.status(404).send({
-      data: null,
-      error: "Property not found",
-    });
+    if (property) {
+      res.status(200).send({
+        data: property.data,
+        error: null,
+      });
+    }
+  } catch (ex) {
+    next(ex);
   }
 }
 
 async function getByLocation(req, res, next) {
   const locationParams = req.query;
 
-  const properties = await axios
-    .get("https://restcountries.eu/rest/v2/all", { params: locationParams })
-    .catch(next);
+  try {
+    const properties = await axios.get("https://restcountries.eu/rest/v2/all", {
+      params: locationParams,
+    });
 
-  res.status(200).send({
-    data: properties.data,
-    error: null,
-  });
+    res.status(200).send({
+      data: properties.data,
+      error: null,
+    });
+  } catch (ex) {
+    next(ex);
+  }
 }
 
 async function getByServices(req, res, next) {
   const serviceParams = req.query;
 
-  const properties = await axios
-    .get("https://restcountries.eu/rest/v2/all", { params: serviceParams })
-    .catch(next);
+  try {
+    const properties = await axios.get("https://restcountries.eu/rest/v2/all", {
+      params: serviceParams,
+    });
 
-  res.status(200).send({
-    data: properties.data,
-    error: null,
-  });
+    res.status(200).send({
+      data: properties.data,
+      error: null,
+    });
+  } catch (ex) {
+    next(ex);
+  }
 }
 
 module.exports = {
