@@ -10,6 +10,7 @@ const app = express();
 
 const errorMiddleware = require("./middleware/error-middleware");
 const propertiesRouter = require("./routes/properties-route");
+const clientsRouter = require("./routes/clients-route");
 
 app.use(morgan("dev"));
 app.use(helmet());
@@ -22,6 +23,7 @@ app.use(
 );
 
 app.use(propertiesRouter);
+app.use(clientsRouter);
 
 app.use(errorMiddleware);
 
