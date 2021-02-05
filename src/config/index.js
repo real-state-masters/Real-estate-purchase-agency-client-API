@@ -5,9 +5,9 @@ logger.enableAll();
 
 const {
   NODE_ENV = "development",
-  MONGO_DB_URL_PRODUCTION,
-  MONGO_DB_URL_DEVELOPMENT,
-  MONGO_DB_URL_TEST,
+  MONGODB_USERNAME,
+  MONGODB_PASSWORD,
+  MONGODB_DATABASE,
   JWT_SECRET,
   BCRYPT_SALT_ROUNDS,
 } = process.env;
@@ -34,7 +34,7 @@ const config = {
   development: {
     ...baseConfig,
     db: {
-      url: MONGO_DB_URL_DEVELOPMENT,
+      url: `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zkwdz.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
     },
     firebase: {
       certConfig: {
@@ -55,7 +55,7 @@ const config = {
   test: {
     ...baseConfig,
     db: {
-      url: MONGO_DB_URL_TEST,
+      url: `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zkwdz.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
     },
     firebase: {
       certConfig: {
@@ -76,7 +76,7 @@ const config = {
   production: {
     ...baseConfig,
     db: {
-      url: MONGO_DB_URL_PRODUCTION,
+      url: `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zkwdz.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
     },
     firebase: {
       certConfig: {
