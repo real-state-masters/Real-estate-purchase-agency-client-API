@@ -25,7 +25,6 @@ async function checkAuthMiddleware(req, res, next) {
       next(error);
     }
   } else {
-    console.log("Hello");
     next();
   }
 }
