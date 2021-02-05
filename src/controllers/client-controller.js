@@ -64,13 +64,13 @@ async function signUp(req, res, next) {
 }
 
 async function addFavorites(req, res, next) {
-  const clientID = req.params.clientID;
+  const user = req.user;
   const propertyId = req.body.id;
 
   try {
     const addFavorites = await db.Client.findOneAndUpdate(
       {
-        _id: clientID,
+        _id: user.uid,
       },
       {
         $addToSet: {
@@ -100,14 +100,13 @@ async function addFavorites(req, res, next) {
 }
 
 async function deleteFavorite(req, res, next) {
-  const { clientID, propertyID } = req.params;
-  console.log("Property:" + propertyID);
-  console.log("Client:" + clientID);
+  const user = req.user;
+  const propertyID = req.params.propertyID;
 
   try {
     const deleteFavorite = await db.Client.findOneAndUpdate(
       {
-        _id: clientID,
+        _id: user.uid,
       },
       {
         $pull: {
@@ -137,15 +136,13 @@ async function deleteFavorite(req, res, next) {
 }
 
 async function bookProperty(req, res, next) {
-  const clientID = req.params.clientID;
+  const user = req.user;
   const propertyId = req.body.id;
-  console.log("Property:" + propertyId);
-  console.log("Client:" + clientID);
 
   try {
     const bookProperty = await db.Client.findOneAndUpdate(
       {
-        _id: clientID,
+        _id: user.uid,
       },
       {
         $addToSet: {
@@ -175,14 +172,13 @@ async function bookProperty(req, res, next) {
 }
 
 async function deleteBookProperty(req, res, next) {
-  const { clientID, propertyID } = req.params;
-  console.log("Property:" + propertyID);
-  console.log("Client:" + clientID);
+  const user = req.user;
+  const propertyID = req.params.propertyID;
 
   try {
     const deleteBookProperty = await db.Client.findOneAndUpdate(
       {
-        _id: clientID,
+        _id: user.uid,
       },
       {
         $pull: {
@@ -212,15 +208,13 @@ async function deleteBookProperty(req, res, next) {
 }
 
 async function unseenProperty(req, res, next) {
-  const clientID = req.params.clientID;
+  const user = req.user;
   const propertyId = req.body.id;
-  console.log("Property:" + propertyId);
-  console.log("Client:" + clientID);
 
   try {
     const unseenProperty = await db.Client.findOneAndUpdate(
       {
-        _id: clientID,
+        _id: user.uid,
       },
       {
         $addToSet: {
@@ -250,15 +244,13 @@ async function unseenProperty(req, res, next) {
 }
 
 async function addCartProperty(req, res, next) {
-  const clientID = req.params.clientID;
+  const user = req.user;
   const propertyId = req.body.id;
-  console.log("Property:" + propertyId);
-  console.log("Client:" + clientID);
 
   try {
     const addCartProperty = await db.Client.findOneAndUpdate(
       {
-        _id: clientID,
+        _id: user.uid,
       },
       {
         $addToSet: {
@@ -288,14 +280,12 @@ async function addCartProperty(req, res, next) {
 }
 
 async function deleteCartProperty(req, res, next) {
-  const { clientID, propertyID } = req.params;
-  console.log("Property:" + propertyID);
-  console.log("Client:" + clientID);
-
+  const user = req.user;
+  const propertyID = req.params;
   try {
     const deleteCartProperty = await db.Client.findOneAndUpdate(
       {
-        _id: clientID,
+        _id: user.uid,
       },
       {
         $pull: {

@@ -28,7 +28,9 @@ const ClientSchema = new mongoose.Schema(
       type: Array,
     },
     shopping_cart: {
-      type: Array,
+      idProp: {
+        type: String,
+      },
     },
   },
   {

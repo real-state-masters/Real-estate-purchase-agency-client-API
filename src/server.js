@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const { json } = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
+const config = require("./config");
 
 require("dotenv").config();
 
@@ -18,7 +19,7 @@ app.use(json());
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: config.client.URL || "http://localhost:3000",
   }),
 );
 

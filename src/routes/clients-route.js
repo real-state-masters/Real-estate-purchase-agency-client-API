@@ -12,26 +12,29 @@ clientsRouter.post("/clients", clientController.createClient);
 
 clientsRouter.post("/sign-up", authMiddleware, clientController.signUp);
 
-clientsRouter.post("/favorites/:clientID", clientController.addFavorites);
+clientsRouter.post("/favorites", authMiddleware, clientController.addFavorites);
 
 clientsRouter.delete(
-  "/favorites/:clientID/:propertyID",
+  "/favorites/:propertyID",
+  authMiddleware,
   clientController.deleteFavorite,
 );
 
-clientsRouter.post("/bookings/:clientID", clientController.bookProperty);
+clientsRouter.post("/bookings", authMiddleware, clientController.bookProperty);
 
 clientsRouter.delete(
-  "/bookings/:clientID/:propertyID",
+  "/bookings/:propertyID",
+  authMiddleware,
   clientController.deleteBookProperty,
 );
 
-clientsRouter.post("/unseen/:clientID", clientController.unseenProperty);
+clientsRouter.post("/unseen", authMiddleware, clientController.unseenProperty);
 
-clientsRouter.post("/cart/:clientID", clientController.addCartProperty);
+clientsRouter.post("/cart", authMiddleware, clientController.addCartProperty);
 
 clientsRouter.delete(
-  "/cart/:clientID/:propertyID",
+  "/cart/:propertyID",
+  authMiddleware,
   clientController.deleteCartProperty,
 );
 
