@@ -13,7 +13,7 @@
     "node.js"
   ],
   "engines": {
-    "node": ">=14.0.0"
+    "node": "14.x"
   },
   "license": "MIT",
   "main": "./src/index.js",
@@ -25,7 +25,8 @@
     "lint:js": "eslint . --ext .js",
     "lint:js:fix": "npm run lint:js -- --fix",
     "lint:format": "prettier --write .",
-    "lint:format:check": "prettier --check ."
+    "lint:format:check": "prettier --check .",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "axios": "^0.21.1",

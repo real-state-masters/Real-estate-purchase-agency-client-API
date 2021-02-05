@@ -42,7 +42,7 @@ async function getProperties(req, res, next) {
 
     if (Object.entries(properties).length !== 0) {
       res.status(200).send({
-        data: properties,
+        data: properties.data,
         error: null,
       });
     } else {
