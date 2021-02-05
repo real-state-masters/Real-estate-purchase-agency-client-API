@@ -24,6 +24,11 @@ let propertiesObject = [
   },
 ];
 
+let propertyObject = {
+  id: "1234",
+  type: "Home",
+};
+
 async function getProperties(req, res, next) {
   try {
     let properties = await axios.get("https://restcountries.eu/rest/v2/all");
@@ -35,10 +40,14 @@ async function getProperties(req, res, next) {
       );
     }
 
-    res.status(200).send({
-      data: properties,
-      error: null,
-    });
+    if (Object.entries(properties).length !== 0) {
+      res.status(200).send({
+        data: properties,
+        error: null,
+      });
+    } else {
+      throw new Error("There is no properties");
+    }
   } catch (ex) {
     next(ex);
   }
@@ -53,10 +62,7 @@ async function getProperty(req, res, next) {
     );
 
     if (req.user) {
-      property = await propertieschangePropertiesLoggedClient(
-        propertiesObject,
-        req.user.uid,
-      );
+      property = await addAllPropertyClient(propertyObject, req.user.uid);
     }
 
     if (property) {
@@ -238,6 +244,32 @@ async function propertieschangePropertiesLoggedClient(data, clientID) {
     }
     if (clientAuth.unwanted_properties.length) {
       data = await dropUnwantedfromProperties(clientAuth, data);
+    }
+
+    console.log(data);
+
+    return data;
+  } else {
+    throw new Error("The client doesn't exist");
+  }
+}
+
+async function addAllPropertyClient(data, clientID) {
+  const clientAuth = await callClientDB(clientID);
+  if (clientAuth) {
+    if (clientAuth.favorites.length) {
+      clientAuth.favorites.map((fav) => {
+        if (fav === data.id) data["fav"] = true;
+      });
+    }
+    if (clientAuth.unwanted_properties.length) {
+      if (clientAuth.unwanted_properties.length) {
+        clientAuth.unwanted_properties.map((unw) => {
+          if (unw === data.id) {
+            data = {};
+          }
+        });
+      }
     }
 
     console.log(data);

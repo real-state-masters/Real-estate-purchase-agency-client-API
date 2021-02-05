@@ -14,6 +14,7 @@ propertiesRouter.get(
 
 propertiesRouter.get(
   "/properties/:propertyID",
+  checkAuthMiddleware,
   propertiesController.getProperty,
 );
 
