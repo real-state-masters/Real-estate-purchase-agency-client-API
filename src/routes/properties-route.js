@@ -1,13 +1,20 @@
 const { Router } = require("express");
 
 const propertiesRouter = Router();
+const { authMiddleware } = require("../middleware/auth-middleware");
+const { checkAuthMiddleware } = require("../middleware/check-auth-middleware");
 
 const propertiesController = require("../controllers/property-controller");
 
-propertiesRouter.get("/properties", propertiesController.getProperties);
+propertiesRouter.get(
+  "/properties",
+  checkAuthMiddleware,
+  propertiesController.getProperties,
+);
 
 propertiesRouter.get(
   "/properties/:propertyID",
+  checkAuthMiddleware,
   propertiesController.getProperty,
 );
 
@@ -15,12 +22,23 @@ propertiesRouter.get("/location", propertiesController.getByLocation);
 
 propertiesRouter.get("/services", propertiesController.getByServices);
 
-// propertiesRouter.post("/favorites", propertiesController.addFavorites);
+propertiesRouter.get(
+  "/favorites",
+  authMiddleware,
+  propertiesController.getFavorites,
+);
 
-// propertiesRouter.delete("/favorites/:propertyID", propertiesController.deleteFavorites);
+propertiesRouter.get(
+  "/bookings",
+  authMiddleware,
+  propertiesController.getBookings,
+);
 
-// propertiesRouter.post("/bookings", propertiesController.bookProperty);
-
-// propertiesRouter.delete("/bookings/:propertyID", propertiesController.deleteBookProperty);
+propertiesRouter.get("/cart", authMiddleware, propertiesController.getCart);
 
 module.exports = propertiesRouter;
+
+//TODO
+//buy
+// cancel buy
+// contact //duda si es desde aqui
