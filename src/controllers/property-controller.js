@@ -1,28 +1,29 @@
 const axios = require("axios");
 const db = require("../models/");
+const config = require("../config");
 
-let propertiesObject = [
-  {
-    id: "1234",
-    type: "Home",
-  },
-  {
-    id: "2569",
-    type: "Home",
-  },
-  {
-    id: "5369",
-    type: "Home",
-  },
-  {
-    id: "12354",
-    type: "Home",
-  },
-  {
-    id: "5236",
-    type: "Home",
-  },
-];
+// let propertiesObject = [
+//   {
+//     id: "1234",
+//     type: "Home",
+//   },
+//   {
+//     id: "2569",
+//     type: "Home",
+//   },
+//   {
+//     id: "5369",
+//     type: "Home",
+//   },
+//   {
+//     id: "12354",
+//     type: "Home",
+//   },
+//   {
+//     id: "5236",
+//     type: "Home",
+//   },
+// ];
 
 let propertyObject = {
   id: "1234",
@@ -31,18 +32,26 @@ let propertyObject = {
 
 async function getProperties(req, res, next) {
   try {
-    let properties = await axios.get("https://restcountries.eu/rest/v2/all");
+    let properties = await axios.get(
+      "https://real-state-admin.herokuapp.com/api/properties",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + config.token,
+        },
+      },
+    );
 
     if (req.user) {
       properties = await propertieschangePropertiesLoggedClient(
-        propertiesObject,
+        properties,
         req.user.uid,
       );
     }
 
     if (Object.entries(properties).length !== 0) {
       res.status(200).send({
-        data: properties.data,
+        data: properties,
         error: null,
       });
     } else {

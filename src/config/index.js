@@ -10,6 +10,7 @@ const {
   MONGODB_DATABASE,
   JWT_SECRET,
   BCRYPT_SALT_ROUNDS,
+  TOKEN_ADMIN_SERVER,
 } = process.env;
 
 const baseConfig = {
@@ -36,6 +37,7 @@ const config = {
     db: {
       url: `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zkwdz.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
     },
+    token: TOKEN_ADMIN_SERVER,
     firebase: {
       certConfig: {
         type: process.env.FB_CERT_TYPE,
@@ -57,6 +59,7 @@ const config = {
     db: {
       url: `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zkwdz.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
     },
+    token: TOKEN_ADMIN_SERVER,
     firebase: {
       certConfig: {
         type: process.env.FB_CERT_TYPE,
@@ -78,6 +81,7 @@ const config = {
     db: {
       url: `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zkwdz.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
     },
+    token: TOKEN_ADMIN_SERVER,
     firebase: {
       certConfig: {
         type: process.env.FB_CERT_TYPE,
