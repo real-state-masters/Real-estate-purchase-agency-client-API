@@ -14,6 +14,17 @@
         "code",
         "infra"
       ]
+    },
+    {
+      "login": "berni23",
+      "name": "Bernat Ferrer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25109342?v=4",
+      "profile": "https://www.linkedin.com/in/bernat-ferrer/",
+      "contributions": [
+        "code",
+        "test",
+        "projectManagement"
+      ]
     }
   ],
   "contributorsPerLine": 7,
