@@ -36,7 +36,7 @@ async function getProperties(req, res, next) {
     }
 
     res.status(200).send({
-      data: properties,
+      data: properties.data,
       error: null,
     });
   } catch (ex) {
@@ -61,7 +61,7 @@ async function getProperty(req, res, next) {
 
     if (property) {
       res.status(200).send({
-        data: property,
+        data: property.data,
         error: null,
       });
     }
