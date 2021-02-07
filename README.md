@@ -106,7 +106,7 @@ Properties  routes :
  
   <hr>
  
- **/clients**
+ * **/clients**
  
  * method:POST
  
@@ -117,7 +117,7 @@ Properties  routes :
  
   <hr>
  
- **/sign-up**
+ * **/sign-up**
  
   
  * method:POST
@@ -129,7 +129,7 @@ Properties  routes :
   <hr>
  
  
- **/favorites**
+ * **/favorites**
  
  *  method : POST
    
@@ -139,7 +139,7 @@ Properties  routes :
  
   <hr>
  
- **/favorites/:propertyID
+ * **/favorites/:propertyID
  
  * method:DELETE
  
@@ -149,7 +149,7 @@ Properties  routes :
  
   <hr>
  
- **/favorites/unseen**
+ * **/favorites/unseen**
  
  * method: POST
  
@@ -159,7 +159,7 @@ Properties  routes :
  
  <hr>
  
- **/buy**
+ * **/buy**
  
  
  * method: POST
