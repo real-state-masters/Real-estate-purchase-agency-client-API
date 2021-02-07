@@ -139,7 +139,7 @@ Properties  routes :
  
   <hr>
  
- * **/favorites/:propertyID
+ * **/favorites/:propertyID**
  
  * method:DELETE
  
