@@ -49,14 +49,6 @@ async function getProperties(req, res, next) {
       );
     }
 
-    if (Object.entries(properties).length !== 0) {
-      res.status(200).send({
-        data: properties,
-        error: null,
-      });
-    } else {
-      throw new Error("There is no properties");
-    }
   } catch (ex) {
     next(ex);
   }
@@ -76,7 +68,7 @@ async function getProperty(req, res, next) {
 
     if (property) {
       res.status(200).send({
-        data: property,
+        data: property.data,
         error: null,
       });
     }
