@@ -2,56 +2,29 @@ const axios = require("axios");
 const db = require("../models/");
 const config = require("../config");
 
-// let propertiesObject = [
-//   {
-//     id: "1234",
-//     type: "Home",
-//   },
-//   {
-//     id: "2569",
-//     type: "Home",
-//   },
-//   {
-//     id: "5369",
-//     type: "Home",
-//   },
-//   {
-//     id: "12354",
-//     type: "Home",
-//   },
-//   {
-//     id: "5236",
-//     type: "Home",
-//   },
-// ];
-
-let propertyObject = {
-  id: "1234",
-  type: "Home",
-};
-
 async function getProperties(req, res, next) {
   try {
     let properties = await axios.get(
-      "https://real-state-admin.herokuapp.com/api/properties",
+      "https://real-state-admin.herokuapp.com/api/properties?jwt=" +
+        config.token,
       {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + config.token,
-        },
+        // headers: {
+        //   "Content-Type": "application/json",
+        //   "jwt": config.token,
+        // },
       },
     );
 
     if (req.user) {
-      properties = await propertieschangePropertiesLoggedClient(
-        properties,
+      properties.data = await propertieschangePropertiesLoggedClient(
+        properties.data,
         req.user.uid,
       );
     }
 
     if (Object.entries(properties).length !== 0) {
       res.status(200).send({
-        data: properties,
+        data: properties.data,
         error: null,
       });
     } else {
@@ -67,16 +40,19 @@ async function getProperty(req, res, next) {
 
   try {
     let property = await axios.get(
-      "https://restcountries.eu/rest/v2/callingcode/" + propertyID,
+      "https://real-state-admin.herokuapp.com/api/properties/" +
+        propertyID +
+        "?jwt=" +
+        config.token,
     );
 
     if (req.user) {
-      property = await addAllPropertyClient(propertyObject, req.user.uid);
+      property.data = await addAllPropertyClient(property.data, req.user.uid);
     }
 
     if (property) {
       res.status(200).send({
-        data: property,
+        data: property.data,
         error: null,
       });
     }
@@ -91,9 +67,12 @@ async function getByLocation(req, res, next) {
   const locationParams = req.query;
 
   try {
-    const properties = await axios.get("https://restcountries.eu/rest/v2/all", {
-      params: locationParams,
-    });
+    const properties = await axios.get(
+      "https://real-state-admin.herokuapp.com/api/location/",
+      {
+        params: locationParams,
+      },
+    );
 
     res.status(200).send({
       data: properties.data,
@@ -127,23 +106,32 @@ async function getFavorites(req, res, next) {
   const user = req.user;
 
   try {
-    const favorites = await db.Client.findOne({
+    const clientAuth = await db.Client.findOne({
       _id: user.uid,
     }).select({
       _id: 0,
       favorites: 1,
     });
 
-    if (favorites) {
-      const favProperties = await axios.get(
-        "https://restcountries.eu/rest/v2/all",
-        {
-          params: favorites,
-        },
+    if (clientAuth) {
+      const favProperties = clientAuth.favorites.map(
+        (fav) =>
+          (fav = axios.get(
+            "https://real-state-admin.herokuapp.com/api/properties/" +
+              fav +
+              "?jwt=" +
+              config.token,
+          )),
+      );
+
+      let reqFavProperties = await Promise.all(favProperties);
+
+      reqFavProperties = reqFavProperties.map(
+        (favProperty) => favProperty.data.data,
       );
 
       res.status(200).send({
-        data: favProperties.data,
+        data: reqFavProperties,
         error: null,
       });
     } else throw new Error("Your favorites list is empty");
@@ -224,7 +212,7 @@ async function callClientDB(clientID) {
 async function addFavtoProperties(clientAuth, data) {
   data.map(function (el) {
     clientAuth.favorites.forEach((fav) => {
-      if (fav === el["id"]) el["fav"] = true;
+      if (fav === el["_id"]) el["fav"] = true;
     });
   });
   return data;
@@ -233,7 +221,7 @@ async function addFavtoProperties(clientAuth, data) {
 async function dropUnwantedfromProperties(clientAuth, data) {
   data.map(function (el) {
     clientAuth.unwanted_properties.forEach((unw) => {
-      if (unw === el["id"]) {
+      if (unw === el["_id"]) {
         const index = data.indexOf(el);
         if (index > -1) {
           data.splice(index, 1);
@@ -244,20 +232,18 @@ async function dropUnwantedfromProperties(clientAuth, data) {
   return data;
 }
 
-async function propertieschangePropertiesLoggedClient(data, clientID) {
+async function propertieschangePropertiesLoggedClient(properties, clientID) {
   const clientAuth = await callClientDB(clientID);
 
   if (clientAuth) {
     if (clientAuth.favorites.length) {
-      data = await addFavtoProperties(clientAuth, data);
+      properties = await addFavtoProperties(clientAuth, properties);
     }
     if (clientAuth.unwanted_properties.length) {
-      data = await dropUnwantedfromProperties(clientAuth, data);
+      properties = await dropUnwantedfromProperties(clientAuth, properties);
     }
 
-    console.log(data);
-
-    return data;
+    return properties;
   } else {
     throw new Error("The client doesn't exist");
   }
@@ -268,20 +254,17 @@ async function addAllPropertyClient(data, clientID) {
   if (clientAuth) {
     if (clientAuth.favorites.length) {
       clientAuth.favorites.map((fav) => {
-        if (fav === data.id) data["fav"] = true;
+        if (fav === data.data["_id"]) data.data["fav"] = true;
       });
     }
     if (clientAuth.unwanted_properties.length) {
-      if (clientAuth.unwanted_properties.length) {
-        clientAuth.unwanted_properties.map((unw) => {
-          if (unw === data.id) {
-            data = {};
-          }
-        });
-      }
+      clientAuth.unwanted_properties.map((unw) => {
+        if (unw === data.data["_id"]) {
+          console.log("Hello");
+          data = {};
+        }
+      });
     }
-
-    console.log(data);
 
     return data;
   } else {
