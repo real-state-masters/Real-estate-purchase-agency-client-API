@@ -13,7 +13,7 @@
     "node.js"
   ],
   "engines": {
-    "node": ">=14.0.0"
+    "node": "14.x"
   },
   "license": "MIT",
   "main": "./src/index.js",
@@ -25,11 +25,13 @@
     "lint:js": "eslint . --ext .js",
     "lint:js:fix": "npm run lint:js -- --fix",
     "lint:format": "prettier --write .",
-    "lint:format:check": "prettier --check ."
+    "lint:format:check": "prettier --check .",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
+    "chalk": "^4.1.0",
     "connect-mongo": "^3.2.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
