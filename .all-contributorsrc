@@ -1,0 +1,36 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "kcochoa",
+      "name": "Katia Camila Valdés Ochoa",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48605886?v=4",
+      "profile": "https://github.com/kcochoa",
+      "contributions": [
+        "code",
+        "infra"
+      ]
+    },
+    {
+      "login": "berni23",
+      "name": "Bernat Ferrer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25109342?v=4",
+      "profile": "https://www.linkedin.com/in/bernat-ferrer/",
+      "contributions": [
+        "code",
+        "test",
+        "projectManagement"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "Real-estate-purchase-agency-client-API",
+  "projectOwner": "real-state-masters",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}

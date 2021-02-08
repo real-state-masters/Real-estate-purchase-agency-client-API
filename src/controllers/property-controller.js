@@ -1,44 +1,54 @@
 const axios = require("axios");
 const db = require("../models/");
+const config = require("../config");
 
-let propertiesObject = [
-  {
-    id: "1234",
-    type: "Home",
-  },
-  {
-    id: "2569",
-    type: "Home",
-  },
-  {
-    id: "5369",
-    type: "Home",
-  },
-  {
-    id: "12354",
-    type: "Home",
-  },
-  {
-    id: "5236",
-    type: "Home",
-  },
-];
+// let propertiesObject = [
+//   {
+//     id: "1234",
+//     type: "Home",
+//   },
+//   {
+//     id: "2569",
+//     type: "Home",
+//   },
+//   {
+//     id: "5369",
+//     type: "Home",
+//   },
+//   {
+//     id: "12354",
+//     type: "Home",
+//   },
+//   {
+//     id: "5236",
+//     type: "Home",
+//   },
+// ];
+
+let propertyObject = {
+  id: "1234",
+  type: "Home",
+};
 
 async function getProperties(req, res, next) {
   try {
-    let properties = await axios.get("https://restcountries.eu/rest/v2/all");
+    let properties = await axios.get(
+      "https://real-state-admin.herokuapp.com/api/properties",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + config.token,
+        },
+      },
+    );
 
     if (req.user) {
       properties = await propertieschangePropertiesLoggedClient(
-        propertiesObject,
+        properties,
         req.user.uid,
       );
     }
 
-    res.status(200).send({
-      data: properties.data,
-      error: null,
-    });
   } catch (ex) {
     next(ex);
   }
@@ -53,10 +63,7 @@ async function getProperty(req, res, next) {
     );
 
     if (req.user) {
-      property = await propertieschangePropertiesLoggedClient(
-        propertiesObject,
-        req.user.uid,
-      );
+      property = await addAllPropertyClient(propertyObject, req.user.uid);
     }
 
     if (property) {
@@ -238,6 +245,32 @@ async function propertieschangePropertiesLoggedClient(data, clientID) {
     }
     if (clientAuth.unwanted_properties.length) {
       data = await dropUnwantedfromProperties(clientAuth, data);
+    }
+
+    console.log(data);
+
+    return data;
+  } else {
+    throw new Error("The client doesn't exist");
+  }
+}
+
+async function addAllPropertyClient(data, clientID) {
+  const clientAuth = await callClientDB(clientID);
+  if (clientAuth) {
+    if (clientAuth.favorites.length) {
+      clientAuth.favorites.map((fav) => {
+        if (fav === data.id) data["fav"] = true;
+      });
+    }
+    if (clientAuth.unwanted_properties.length) {
+      if (clientAuth.unwanted_properties.length) {
+        clientAuth.unwanted_properties.map((unw) => {
+          if (unw === data.id) {
+            data = {};
+          }
+        });
+      }
     }
 
     console.log(data);

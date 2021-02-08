@@ -5,11 +5,12 @@ logger.enableAll();
 
 const {
   NODE_ENV = "development",
-  MONGO_DB_URL_PRODUCTION,
-  MONGO_DB_URL_DEVELOPMENT,
-  MONGO_DB_URL_TEST,
+  MONGODB_USERNAME,
+  MONGODB_PASSWORD,
+  MONGODB_DATABASE,
   JWT_SECRET,
   BCRYPT_SALT_ROUNDS,
+  TOKEN_ADMIN_SERVER,
 } = process.env;
 
 const baseConfig = {
@@ -34,14 +35,15 @@ const config = {
   development: {
     ...baseConfig,
     db: {
-      url: MONGO_DB_URL_DEVELOPMENT,
+      url: `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zkwdz.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
     },
+    token: TOKEN_ADMIN_SERVER,
     firebase: {
       certConfig: {
         type: process.env.FB_CERT_TYPE,
         project_id: process.env.FB_CERT_PROJECT_ID,
         private_key_id: process.env.FB_CERT_PRIVATE_KEY_ID,
-        private_key: process.env.FB_CERT_PRIVATE_KEY,
+        private_key: process.env.FB_CERT_PRIVATE_KEY.replace(/\\n/gm, "\n"),
         client_email: process.env.FB_CERT_CLIENT_EMAIL,
         client_id: process.env.FB_CERT_CLIENT_ID,
         auth_uri: process.env.FB_CERT_AUTH_URI,
@@ -55,14 +57,15 @@ const config = {
   test: {
     ...baseConfig,
     db: {
-      url: MONGO_DB_URL_TEST,
+      url: `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zkwdz.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
     },
+    token: TOKEN_ADMIN_SERVER,
     firebase: {
       certConfig: {
         type: process.env.FB_CERT_TYPE,
         project_id: process.env.FB_CERT_PROJECT_ID,
         private_key_id: process.env.FB_CERT_PRIVATE_KEY_ID,
-        private_key: process.env.FB_CERT_PRIVATE_KEY,
+        private_key: process.env.FB_CERT_PRIVATE_KEY.replace(/\\n/gm, "\n"),
         client_email: process.env.FB_CERT_CLIENT_EMAIL,
         client_id: process.env.FB_CERT_CLIENT_ID,
         auth_uri: process.env.FB_CERT_AUTH_URI,
@@ -76,14 +79,15 @@ const config = {
   production: {
     ...baseConfig,
     db: {
-      url: MONGO_DB_URL_PRODUCTION,
+      url: `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zkwdz.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
     },
+    token: TOKEN_ADMIN_SERVER,
     firebase: {
       certConfig: {
         type: process.env.FB_CERT_TYPE,
         project_id: process.env.FB_CERT_PROJECT_ID,
         private_key_id: process.env.FB_CERT_PRIVATE_KEY_ID,
-        private_key: process.env.FB_CERT_PRIVATE_KEY,
+        private_key: process.env.FB_CERT_PRIVATE_KEY.replace(/\\n/gm, "\n"),
         client_email: process.env.FB_CERT_CLIENT_EMAIL,
         client_id: process.env.FB_CERT_CLIENT_ID,
         auth_uri: process.env.FB_CERT_AUTH_URI,
