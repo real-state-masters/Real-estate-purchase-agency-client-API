@@ -18,7 +18,7 @@ propertiesRouter.get(
   propertiesController.getProperty,
 );
 
-propertiesRouter.get("/location", propertiesController.getByLocation);
+propertiesRouter.get("/location/:address", propertiesController.getByLocation);
 
 propertiesRouter.get("/services", propertiesController.getByServices);
 
