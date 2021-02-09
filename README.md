@@ -1,22 +1,25 @@
 # Real-estate-purchase-agency-client-API
 
-
 <br>
 
-
-API made with Nodejs acting as an intermediate between the client website for the real state purchase agency ( https://github.com/real-state-masters/Real-estate-purchase-agency-client-API )  and the properties API ( https://github.com/real-state-masters/real-estate-purchase-agency-admin-API)
-
+API made with Nodejs acting as an intermediate between the client website for
+the real state purchase agency (
+https://github.com/real-state-masters/Real-estate-purchase-agency-client-API )
+and the properties API (
+https://github.com/real-state-masters/real-estate-purchase-agency-admin-API)
 
 <br>
-
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Contributors ✨
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks goes to these wonderful people
+([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -33,22 +36,20 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the
+[all-contributors](https://github.com/all-contributors/all-contributors)
+specification. Contributions of any kind welcome!
 
+Properties routes :
 
+- **/properties**
 
+- method : GET
 
-Properties  routes : 
+- middleware: check authentification
 
+- Description : get all properties
 
-  *  **/properties** 
-  
-  * method : GET 
-  
-  * middleware: check authentification
-  
-  * Description : get all properties
- 
  <hr>
   
  * **/properties/:propertyID**
@@ -94,38 +95,34 @@ Properties  routes :
  
  Clients routes
 
- 
- * **/clients/:clientID**
- 
- * method:GET
- 
- * middleware:no middleware
- 
- * description: get client details
- 
- 
+- **/clients/:clientID**
+
+- method:GET
+
+- middleware:no middleware
+
+- description: get client details
+
   <hr>
- 
- * **/clients**
- 
- * method:POST
- 
- * middleware:no middleware
- 
- * description: create  a client
- 
- 
+
+* **/clients**
+
+* method:POST
+
+* middleware:no middleware
+
+* description: create a client
+
   <hr>
- 
- * **/sign-up**
- 
-  
- * method:POST
- 
- * middleware: authentification middleware
- 
- * description: sign up via firebase
- 
+
+* **/sign-up**
+
+* method:POST
+
+* middleware: authentification middleware
+
+* description: sign up via firebase
+
   <hr>
  
  
@@ -167,20 +164,3 @@ Properties  routes :
  * middleware: authentification middleware
  
  * description: buy property. send property id in the body
- 
- 
- 
- 
- 
- 
-  
-  
-  
-  
-   
-
-
-
-
-
-

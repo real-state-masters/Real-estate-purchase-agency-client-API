@@ -68,16 +68,18 @@ async function getProperty(req, res, next) {
 // TODO get properties by location if a client is logged verify favorites and unseen
 
 async function getByLocation(req, res, next) {
-  const locationParams = req.query;
+  const locationParams = req.params.address;
 
   try {
     const properties = await axios.get(
-      "https://real-state-admin.herokuapp.com/api/location/",
+      "https://real-state-admin.herokuapp.com/api/properties/location/" +
+        locationParams,
       {
-        params: locationParams,
+        headers: {
+          Authorization: `Bearer ${config.token}`,
+        },
       },
     );
-
     res.status(200).send({
       data: properties.data,
       error: null,
