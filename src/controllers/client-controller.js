@@ -20,26 +20,6 @@ async function getClientDetails(req, res, next) {
   }
 }
 
-async function createClient(req, res, next) {
-  const { email, password } = req.body;
-
-  try {
-    const user = await db.Client.create({
-      email,
-      password,
-    });
-
-    res.status(200).send({
-      data: {
-        _id: user._id,
-        email: user.email,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
 async function signUp(req, res, next) {
   const { uid, email } = req.user;
 
@@ -316,7 +296,6 @@ async function deleteCartProperty(req, res, next) {
 
 module.exports = {
   getClientDetails: getClientDetails,
-  createClient: createClient,
   signUp: signUp,
   addFavorites: addFavorites,
   deleteFavorite: deleteFavorite,

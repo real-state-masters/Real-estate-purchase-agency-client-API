@@ -2,16 +2,17 @@ const axios = require("axios");
 const db = require("../models/");
 const config = require("../config");
 
+/* PROPERTIES ENDPOINTS */
+
+// get all properties if a client is logged verify favorites and unseen
 async function getProperties(req, res, next) {
   try {
     let properties = await axios.get(
-      "https://real-state-admin.herokuapp.com/api/properties?jwt=" +
-        config.token,
+      "https://real-state-admin.herokuapp.com/api/properties",
       {
-        // headers: {
-        //   "Content-Type": "application/json",
-        //   "jwt": config.token,
-        // },
+        headers: {
+          Authorization: `Bearer ${config.token}`,
+        },
       },
     );
 
@@ -21,7 +22,6 @@ async function getProperties(req, res, next) {
         req.user.uid,
       );
     }
-
 
     if (Object.entries(properties).length !== 0) {
       res.status(200).send({
@@ -36,15 +36,18 @@ async function getProperties(req, res, next) {
   }
 }
 
+// get a property by ID if a client is logged verify favorites and unseen
 async function getProperty(req, res, next) {
   const propertyID = req.params.propertyID;
 
   try {
     let property = await axios.get(
-      "https://real-state-admin.herokuapp.com/api/properties/" +
-        propertyID +
-        "?jwt=" +
-        config.token,
+      "https://real-state-admin.herokuapp.com/api/properties/" + propertyID,
+      {
+        headers: {
+          Authorization: `Bearer ${config.token}`,
+        },
+      },
     );
 
     if (req.user) {
@@ -62,7 +65,7 @@ async function getProperty(req, res, next) {
   }
 }
 
-// TODO Add function to setFAV and unwanted
+// TODO get properties by location if a client is logged verify favorites and unseen
 
 async function getByLocation(req, res, next) {
   const locationParams = req.query;
@@ -74,25 +77,6 @@ async function getByLocation(req, res, next) {
         params: locationParams,
       },
     );
-
-    res.status(200).send({
-      data: properties.data,
-      error: null,
-    });
-  } catch (ex) {
-    next(ex);
-  }
-}
-
-// TODO Add function to setFAV and unwanted
-
-async function getByServices(req, res, next) {
-  const serviceParams = req.query;
-
-  try {
-    const properties = await axios.get("https://restcountries.eu/rest/v2/all", {
-      params: serviceParams,
-    });
 
     res.status(200).send({
       data: properties.data,
@@ -118,10 +102,12 @@ async function getFavorites(req, res, next) {
       const favProperties = clientAuth.favorites.map(
         (fav) =>
           (fav = axios.get(
-            "https://real-state-admin.herokuapp.com/api/properties/" +
-              fav +
-              "?jwt=" +
-              config.token,
+            "https://real-state-admin.herokuapp.com/api/properties/" + fav,
+            {
+              headers: {
+                Authorization: `Bearer ${config.token}`,
+              },
+            },
           )),
       );
 
@@ -136,6 +122,85 @@ async function getFavorites(req, res, next) {
         error: null,
       });
     } else throw new Error("Your favorites list is empty");
+  } catch (ex) {
+    next(ex);
+  }
+}
+
+// Buy a property and send info to Admin server to change status
+async function buyProperty(req, res, next) {
+  const {
+    name,
+    lastname,
+    phone,
+    current_address,
+    profession,
+    heritage,
+    email,
+  } = req.body;
+  const propertyID = req.params.propertyID;
+
+  try {
+    const client = await db.Client.findOneAndUpdate(
+      {
+        _id: req.user.uid,
+      },
+      {
+        $addToSet: {
+          bought_properties: {
+            contact: {
+              name: name,
+              lastname: lastname,
+              phone: phone,
+              current_address: current_address,
+              profession: profession,
+              heritage: heritage,
+              email: email,
+            },
+            property_id: propertyID,
+          },
+        },
+      },
+      {
+        new: true,
+      },
+    ).select({
+      bought_properties: 1,
+    });
+
+    if (client) {
+      const buyToAdmin = await axios.post(
+        "https://real-state-admin.herokuapp.com/api/properties/buy",
+        { id: req.params.propertyID },
+        {
+          headers: {
+            Authorization: `Bearer ${config.token}`,
+          },
+        },
+      );
+
+      console.log(buyToAdmin.data);
+      res.status(200).send({
+        data: buyToAdmin.data,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getByServices(req, res, next) {
+  const serviceParams = req.query;
+
+  try {
+    const properties = await axios.get("https://restcountries.eu/rest/v2/all", {
+      params: serviceParams,
+    });
+
+    res.status(200).send({
+      data: properties.data,
+      error: null,
+    });
   } catch (ex) {
     next(ex);
   }
@@ -281,4 +346,5 @@ module.exports = {
   getFavorites: getFavorites,
   getBookings: getBookings,
   getCart: getCart,
+  buyProperty: buyProperty,
 };
