@@ -7,7 +7,7 @@ const request = supertest(app);
 
 describe("test get endpoints", () => {
   test("get testing location", async () => {
-    const res = await request.get("/location");
+    const res = await request.get("/location/barcelona");
     expect(res.status).toBe(200);
     expect(res.body).toEqual(expect.any(Object));
   });
