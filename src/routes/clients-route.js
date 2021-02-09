@@ -8,8 +8,6 @@ const clientController = require("../controllers/client-controller");
 
 clientsRouter.get("/clients/:clientID", clientController.getClientDetails);
 
-clientsRouter.post("/clients", clientController.createClient);
-
 clientsRouter.post("/sign-up", authMiddleware, clientController.signUp);
 
 clientsRouter.post("/favorites", authMiddleware, clientController.addFavorites);
@@ -38,6 +36,4 @@ clientsRouter.delete(
   clientController.deleteCartProperty,
 );
 
-// TODO
-// clientsRouter.post("/buy", clientController.buyProperty);
 module.exports = clientsRouter;

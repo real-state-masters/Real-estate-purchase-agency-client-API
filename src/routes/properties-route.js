@@ -36,6 +36,12 @@ propertiesRouter.get(
 
 propertiesRouter.get("/cart", authMiddleware, propertiesController.getCart);
 
+propertiesRouter.post(
+  "/buy/:propertyID",
+  authMiddleware,
+  propertiesController.buyProperty,
+);
+
 module.exports = propertiesRouter;
 
 //TODO
