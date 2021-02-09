@@ -1,7 +1,7 @@
 const { Router } = require("express");
 
 const propertiesRouter = Router();
-const { authMiddleware } = require("../middleware/auth-middleware");
+const { authMiddleware } = require("../middleware/auth-middleware.js");
 const { checkAuthMiddleware } = require("../middleware/check-auth-middleware");
 
 const propertiesController = require("../controllers/property-controller");

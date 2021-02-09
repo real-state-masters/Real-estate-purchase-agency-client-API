@@ -326,7 +326,6 @@ async function addAllPropertyClient(data, clientID) {
     if (clientAuth.unwanted_properties.length) {
       clientAuth.unwanted_properties.map((unw) => {
         if (unw === data.data["_id"]) {
-          console.log("Hello");
           data = {};
         }
       });
