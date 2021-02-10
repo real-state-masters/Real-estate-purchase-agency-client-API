@@ -38,6 +38,7 @@ const config = {
       url: `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zkwdz.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
     },
     token: TOKEN_ADMIN_SERVER,
+
     firebase: {
       certConfig: {
         type: process.env.FB_CERT_TYPE,
@@ -61,6 +62,10 @@ const config = {
     },
     token: TOKEN_ADMIN_SERVER,
     firebase: {
+      mail: process.env.FIREBASE_MAIL,
+      api_key: process.env.FIREBASE_API_KEY,
+      user_password: process.env.FIREBASE_USER_PASSWORD,
+      app_id: process.env.FIREBASE_APP_ID,
       certConfig: {
         type: process.env.FB_CERT_TYPE,
         project_id: process.env.FB_CERT_PROJECT_ID,
