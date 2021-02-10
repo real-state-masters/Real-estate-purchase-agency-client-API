@@ -144,15 +144,16 @@ Properties routes :
 * description: unmark property from favorites
 
   <hr>
- 
- * **/favorites/unseen**
- 
- * method: POST
- 
- * midldeware: authentification middleware
- 
- * description: mark property as ' unwanted' , and thus, wil not appear on the list anymore
- 
+
+* **/favorites/unseen**
+
+* method: POST
+
+* midldeware: authentification middleware
+
+* description: mark property as ' unwanted' , and thus, wil not appear on the
+  list anymore
+
  <hr>
  
  * **/buy**

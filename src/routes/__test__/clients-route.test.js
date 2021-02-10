@@ -16,7 +16,7 @@ describe("endpoints defined in clients-route, method:GET", () => {
 
   firebase.initializeApp(firebaseConfig);
 
-  test("sign up in another way", async () => {
+  test("sign up", async () => {
     var signed = false;
     await firebase
       .auth()

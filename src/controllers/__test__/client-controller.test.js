@@ -2,24 +2,63 @@
 
 //const mongoose = require('mongoose')
 const dbHandler = require("./db-handler");
-
 const db = require("../../models");
 
 beforeAll(async () => await dbHandler.connect());
-
 afterEach(async () => await dbHandler.clearDatabase());
-
 afterAll(async () => await dbHandler.closeDatabase());
 
 describe("test client CRUD", () => {
-  it("can be created correctly", async () => {
-    expect(async () => await db.Client.create(testClient)).not.toThrow();
+  it("can be created correctly", () => {
+    expect(
+      async () =>
+        await db.Client.create({
+          _id: "1",
+          email: "dummyemail@assembler1.com",
+        }),
+    ).not.toThrow();
   });
+
+  it("can be read correctly", () => {
+    expect(async () => {
+      const createClient = await db.Client.create({
+        _id: "2",
+        email: "dummyemail@assembler2.com",
+      });
+      expect(createClient.email).toBe("dummyemail@assembler2.com");
+    }).not.toThrow();
+  });
+
+  it("can be updated correctly", async () => {
+    const createClient = await db.Client.create({
+      _id: "3",
+      email: "dummyemail@assembler3.com",
+    });
+    await db.Client.findOneAndUpdate(
+      {
+        _id: createClient._id,
+      },
+      {
+        email: updatedEmail,
+      },
+    );
+
+    const updated = await db.Client.findOne({
+      _id: createClient._id,
+    });
+    expect(updated.email).toBe(updatedEmail);
+  });
+
+  it("can be deleted correctly", async () => {
+    const createClient = await db.Client.create({
+      _id: "4",
+      email: "dummyemail@assembler4.com",
+    });
+    const deleted = await db.Client.findOneAndDelete(createClient._id);
+    const notFound = await db.Client.findOne({
+      _id: deleted._id,
+    });
+    expect(notFound).toBeFalsy();
+  });
+  const updatedEmail = "dummyemail@updated.com";
 });
-
-const testClient = {
-  _id: "5shn9Ht2W8WN6Hc1BUcNi35H4bg7",
-  email: " dummyEmail@gmail.com",
-};
-
-//const updateEmail = 'dummyEmail2@gmail.com';
