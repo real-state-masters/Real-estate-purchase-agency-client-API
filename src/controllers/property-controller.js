@@ -82,7 +82,7 @@ async function getByLocation(req, res, next) {
     );
     if (req.user) {
       properties.data = await propertieschangePropertiesLoggedClient(
-        properties.data,
+        properties.data.data,
         req.user.uid,
       );
     }
@@ -282,6 +282,7 @@ async function callClientDB(clientID) {
 }
 
 async function addFavtoProperties(clientAuth, data) {
+  console.log(data);
   data.map(function (el) {
     clientAuth.favorites.forEach((fav) => {
       if (fav === el["_id"]) el["fav"] = true;
@@ -306,6 +307,7 @@ async function dropUnwantedfromProperties(clientAuth, data) {
 
 async function propertieschangePropertiesLoggedClient(properties, clientID) {
   const clientAuth = await callClientDB(clientID);
+  console.log(clientAuth);
 
   if (clientAuth) {
     if (clientAuth.favorites.length) {
