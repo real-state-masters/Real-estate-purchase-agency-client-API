@@ -20,26 +20,22 @@ propertiesRouter.get(
 
 propertiesRouter.get("/location/:address", propertiesController.getByLocation);
 
-propertiesRouter.get("/services", propertiesController.getByServices);
-
 propertiesRouter.get(
   "/favorites",
   authMiddleware,
   propertiesController.getFavorites,
 );
 
-propertiesRouter.get(
-  "/bookings",
-  authMiddleware,
-  propertiesController.getBookings,
-);
-
-propertiesRouter.get("/cart", authMiddleware, propertiesController.getCart);
-
 propertiesRouter.post(
   "/buy/:propertyID",
   authMiddleware,
   propertiesController.buyProperty,
+);
+
+propertiesRouter.get(
+  "/buyHistorial",
+  authMiddleware,
+  propertiesController.buyHistorialDetails,
 );
 
 module.exports = propertiesRouter;

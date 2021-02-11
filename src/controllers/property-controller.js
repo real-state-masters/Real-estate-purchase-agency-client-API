@@ -71,7 +71,7 @@ async function getByLocation(req, res, next) {
   const locationParams = req.params.address;
 
   try {
-    const properties = await axios.get(
+    let properties = await axios.get(
       "https://real-state-admin.herokuapp.com/api/properties/location/" +
         locationParams,
       {
@@ -80,6 +80,12 @@ async function getByLocation(req, res, next) {
         },
       },
     );
+    if (req.user) {
+      properties.data = await propertieschangePropertiesLoggedClient(
+        properties.data,
+        req.user.uid,
+      );
+    }
     res.status(200).send({
       data: properties.data,
       error: null,
@@ -191,81 +197,79 @@ async function buyProperty(req, res, next) {
   }
 }
 
-async function getByServices(req, res, next) {
-  const serviceParams = req.query;
-
-  try {
-    const properties = await axios.get("https://restcountries.eu/rest/v2/all", {
-      params: serviceParams,
-    });
-
-    res.status(200).send({
-      data: properties.data,
-      error: null,
-    });
-  } catch (ex) {
-    next(ex);
-  }
-}
-
-async function getBookings(req, res, next) {
+async function buyHistorialDetails(req, res, next) {
   const user = req.user;
 
   try {
-    const bookings = await db.Client.findOne({
+    const buyHistorial = await db.Client.findOne({
       _id: user.uid,
     }).select({
       _id: 0,
-      booked_properties: 1,
+      bought_properties: 1,
     });
 
-    if (bookings) {
-      const bookProperties = await axios.get(
-        "https://restcountries.eu/rest/v2/all",
-        {
-          params: bookings,
-        },
+    if (buyHistorial) {
+      const boughtProperties = buyHistorial.bought_properties.map(
+        (el) =>
+          (el = axios.get(
+            "https://real-state-admin.herokuapp.com/api/properties/" +
+              el.property_id,
+            {
+              headers: {
+                Authorization: `Bearer ${config.token}`,
+              },
+            },
+          )),
       );
+      let reqBoughtProperties = await Promise.all(boughtProperties);
+
+      reqBoughtProperties = reqBoughtProperties.map((boughtProperty) => {
+        if (boughtProperty.data.errors === "Property not found") {
+          const index = reqBoughtProperties.indexOf(boughtProperty);
+          if (index > -1) {
+            reqBoughtProperties.splice(index, 1);
+          }
+        } else {
+          let existProperties = [];
+          existProperties.push(boughtProperty.data.data._id);
+          deletefromBuyHistorial(existProperties, buyHistorial, user.uid);
+          return boughtProperty.data;
+        }
+      });
 
       res.status(200).send({
-        data: bookProperties,
+        data: reqBoughtProperties,
         error: null,
       });
-    } else throw new Error("Your booking list is empty");
+    } else throw new Error("Your bought historial is empty");
   } catch (ex) {
     next(ex);
   }
 }
 
-async function getCart(req, res, next) {
-  const user = req.user;
+function deletefromBuyHistorial(existProperties, buyHistorial, user_id) {
+  const intersection = buyHistorial.bought_properties.filter(
+    (element) => !existProperties.includes(element.property_id),
+  );
+  const updatedHistorial = db.Client.findOneAndUpdate(
+    {
+      _id: user_id,
+    },
+    {
+      $pull: {
+        bought_properties: { $in: intersection },
+      },
+    },
+    {
+      new: true,
+      multi: true,
+    },
+  ).select({
+    bought_properties: 1,
+  });
 
-  try {
-    const cart = await db.Client.findOne({
-      _id: user.uid,
-    }).select({
-      _id: 0,
-      shopping_cart: 1,
-    });
-
-    if (cart) {
-      const cartProperties = await axios.get(
-        "https://restcountries.eu/rest/v2/all",
-        {
-          params: cart,
-        },
-      );
-
-      res.status(200).send({
-        data: cartProperties,
-        error: null,
-      });
-    } else throw new Error("Your cart list is empty");
-  } catch (ex) {
-    next(ex);
-  }
+  return updatedHistorial;
 }
-
 async function callClientDB(clientID) {
   const clientAuth = await db.Client.findOne({
     _id: clientID,
@@ -344,9 +348,7 @@ module.exports = {
   getProperties: getProperties,
   getProperty: getProperty,
   getByLocation: getByLocation,
-  getByServices: getByServices,
   getFavorites: getFavorites,
-  getBookings: getBookings,
-  getCart: getCart,
   buyProperty: buyProperty,
+  buyHistorialDetails: buyHistorialDetails,
 };
