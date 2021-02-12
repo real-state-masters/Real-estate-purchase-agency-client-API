@@ -124,36 +124,36 @@ Properties routes :
 * description: sign up via firebase
 
   <hr>
- 
- 
- * **/favorites**
- 
- *  method : POST
-   
- * middleware: authentification middleware
- 
- * description : mark property as favorite. send property id in the body .
- 
+
+* **/favorites**
+
+* method : POST
+
+* middleware: authentification middleware
+
+* description : mark property as favorite. send property id in the body .
+
   <hr>
- 
- * **/favorites/:propertyID**
- 
- * method:DELETE
- 
- * middleware: authentification middleware
- 
- * description: unmark property from favorites
- 
+
+* **/favorites/:propertyID**
+
+* method:DELETE
+
+* middleware: authentification middleware
+
+* description: unmark property from favorites
+
   <hr>
- 
- * **/favorites/unseen**
- 
- * method: POST
- 
- * midldeware: authentification middleware
- 
- * description: mark property as ' unwanted' , and thus, wil not appear on the list anymore
- 
+
+* **/favorites/unseen**
+
+* method: POST
+
+* midldeware: authentification middleware
+
+* description: mark property as ' unwanted' , and thus, wil not appear on the
+  list anymore
+
  <hr>
  
  * **/buy**

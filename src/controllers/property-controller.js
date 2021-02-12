@@ -354,6 +354,7 @@ async function addFavtoProperties(clientAuth, data) {
   data.map(function (el) {
     clientAuth.favorites.forEach((fav) => {
       if (fav === el["_id"]) el["fav"] = true;
+      else el["fav"] = false;
     });
   });
   return data;
