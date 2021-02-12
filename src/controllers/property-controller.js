@@ -36,6 +36,37 @@ async function getProperties(req, res, next) {
   }
 }
 
+async function getPropertiesLast(req, res, next) {
+  try {
+    let properties = await axios.get(
+      "https://real-state-admin.herokuapp.com/api/properties/get/last",
+      {
+        headers: {
+          Authorization: `Bearer ${config.token}`,
+        },
+      },
+    );
+
+    if (req.user) {
+      properties.data = await propertieschangePropertiesLoggedClient(
+        properties.data.data,
+        req.user.uid,
+      );
+    }
+
+    if (Object.entries(properties).length !== 0) {
+      res.status(200).send({
+        data: properties.data,
+        error: null,
+      });
+    } else {
+      throw new Error("There is no properties");
+    }
+  } catch (ex) {
+    next(ex);
+  }
+}
+
 // get a property by ID if a client is logged verify favorites and unseen
 async function getProperty(req, res, next) {
   const propertyID = req.params.propertyID;
@@ -385,6 +416,7 @@ async function addAllPropertyClient(data, clientID) {
 
 module.exports = {
   getProperties: getProperties,
+  getPropertiesLast: getPropertiesLast,
   getProperty: getProperty,
   getByLocation: getByLocation,
   getFavorites: getFavorites,

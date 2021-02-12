@@ -13,6 +13,12 @@ propertiesRouter.get(
 );
 
 propertiesRouter.get(
+  "/properties/last",
+  checkAuthMiddleware,
+  propertiesController.getPropertiesLast,
+);
+
+propertiesRouter.get(
   "/properties/:propertyID",
   checkAuthMiddleware,
   propertiesController.getProperty,
