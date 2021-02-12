@@ -398,6 +398,7 @@ async function addAllPropertyClient(data, clientID) {
     if (clientAuth.favorites.length) {
       clientAuth.favorites.map((fav) => {
         if (fav === data.data["_id"]) data.data["fav"] = true;
+        else data.data["fav"] = false;
       });
     }
     if (clientAuth.unwanted_properties.length) {
