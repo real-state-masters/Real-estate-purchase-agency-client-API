@@ -18,7 +18,11 @@ propertiesRouter.get(
   propertiesController.getProperty,
 );
 
-propertiesRouter.get("/location/:address", propertiesController.getByLocation);
+propertiesRouter.get(
+  "/location/:address",
+  checkAuthMiddleware,
+  propertiesController.getByLocation,
+);
 
 propertiesRouter.get(
   "/favorites",

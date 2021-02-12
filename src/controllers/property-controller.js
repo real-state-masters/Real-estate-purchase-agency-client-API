@@ -82,7 +82,7 @@ async function getByLocation(req, res, next) {
     );
     if (req.user) {
       properties.data = await propertieschangePropertiesLoggedClient(
-        properties.data,
+        properties.data.data,
         req.user.uid,
       );
     }
@@ -120,10 +120,21 @@ async function getFavorites(req, res, next) {
       );
 
       let reqFavProperties = await Promise.all(favProperties);
+      let existProperties = [];
 
-      reqFavProperties = reqFavProperties.map(
-        (favProperty) => favProperty.data.data,
-      );
+      reqFavProperties = reqFavProperties.map((favProperty) => {
+        if (favProperty.data.errors === "Property not found") {
+          const index = reqFavProperties.indexOf(reqFavProperties);
+          if (index > -1) {
+            reqFavProperties.splice(index, 1);
+          }
+        } else {
+          existProperties.push(favProperty.data.data._id);
+          return favProperty.data.data;
+        }
+      });
+
+      await deletefromBuyFavorites(existProperties, clientAuth, user.uid);
 
       res.status(200).send({
         data: reqFavProperties,
@@ -222,6 +233,7 @@ async function buyHistorialDetails(req, res, next) {
           )),
       );
       let reqBoughtProperties = await Promise.all(boughtProperties);
+      let existProperties = [];
 
       reqBoughtProperties = reqBoughtProperties.map((boughtProperty) => {
         if (boughtProperty.data.errors === "Property not found") {
@@ -230,12 +242,12 @@ async function buyHistorialDetails(req, res, next) {
             reqBoughtProperties.splice(index, 1);
           }
         } else {
-          let existProperties = [];
           existProperties.push(boughtProperty.data.data._id);
-          deletefromBuyHistorial(existProperties, buyHistorial, user.uid);
           return boughtProperty.data;
         }
       });
+
+      await deletefromBuyHistorial(existProperties, buyHistorial, user.uid);
 
       res.status(200).send({
         data: reqBoughtProperties,
@@ -247,7 +259,32 @@ async function buyHistorialDetails(req, res, next) {
   }
 }
 
-function deletefromBuyHistorial(existProperties, buyHistorial, user_id) {
+async function deletefromBuyFavorites(existProperties, favorites, user_id) {
+  const intersection = favorites.favorites.filter(
+    (element) => !existProperties.includes(element),
+  );
+
+  const updatedFavorites = db.Client.findOneAndUpdate(
+    {
+      _id: user_id,
+    },
+    {
+      $pull: {
+        favorites: { $in: intersection },
+      },
+    },
+    {
+      new: true,
+      multi: true,
+    },
+  ).select({
+    favorites: 1,
+  });
+
+  return updatedFavorites;
+}
+
+async function deletefromBuyHistorial(existProperties, buyHistorial, user_id) {
   const intersection = buyHistorial.bought_properties.filter(
     (element) => !existProperties.includes(element.property_id),
   );
@@ -282,6 +319,7 @@ async function callClientDB(clientID) {
 }
 
 async function addFavtoProperties(clientAuth, data) {
+  console.log(data);
   data.map(function (el) {
     clientAuth.favorites.forEach((fav) => {
       if (fav === el["_id"]) el["fav"] = true;
@@ -306,6 +344,7 @@ async function dropUnwantedfromProperties(clientAuth, data) {
 
 async function propertieschangePropertiesLoggedClient(properties, clientID) {
   const clientAuth = await callClientDB(clientID);
+  console.log(clientAuth);
 
   if (clientAuth) {
     if (clientAuth.favorites.length) {
