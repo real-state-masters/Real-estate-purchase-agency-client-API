@@ -11,7 +11,7 @@ module.exports = (err, req, res, next) => {
     return next(err);
   }
 
-  res.status(500).send({
+  res.status(401).send({
     data: null,
     error: err.message,
   });

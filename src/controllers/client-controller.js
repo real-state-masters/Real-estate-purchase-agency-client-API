@@ -24,7 +24,9 @@ async function signUp(req, res, next) {
   const { uid, email } = req.user;
 
   try {
-    const client = await db.Client.findOne({ email: email });
+    const client = await db.Client.findOne({
+      email: email,
+    });
 
     if (client) {
       return res.sendStatus(200);
